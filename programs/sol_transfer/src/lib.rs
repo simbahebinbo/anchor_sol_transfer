@@ -3,23 +3,24 @@ use anchor_lang::prelude::*;
 declare_id!("FhbFwFVKe1NwzSxPSatgwACiRHpaeaccAA7rmqBpTc8R");
 
 #[program]
-pub mod sol_transfer2 {
+pub mod sol_transfer {
     use super::*;
 
-    pub fn sol_transfer(context: Context<TransferSol>, _lamports: u64) -> Result<()> {
+    pub fn transfer_sol(context: Context<TransferSol>, amount: u64) -> Result<()> {
         let from = &mut context.accounts.from;
         let to = &mut context.accounts.to;
 
         let ix = anchor_lang::solana_program::system_instruction::transfer(
-            &from.key, &to.key, _lamports,
+            &from.key, &to.key, amount,
         );
 
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[from.to_account_info(), to.to_account_info().clone()],
-        ).expect("Error in transfering the sol ...");
+        ).expect("Error in transferring the sol ...");
 
-        msg!("{} Sol transferd ... ", _lamports);
+        msg!("{} sol transferred ... ", amount);
+
         Ok(())
     }
 }
